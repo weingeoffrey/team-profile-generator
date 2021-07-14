@@ -1,4 +1,81 @@
-const generatePage = () => {
+function generateManagerCard(manager){
+
+    let name = manager.getName();
+    let role = manager.getRole();
+    let id = manager.getId();
+    let email = manager.getEmail();
+    let officeNum = manager.getOffice();
+
+    const card = `<div class="card py-4 shadow-lg" style="width: 18rem;">
+        <div class="card-header">
+          <h5 class="card-title">${name}</h5>
+          <h5 class="card-title">${role}</h5>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item">ID: ${id}</li>
+          <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
+          <li class="list-group-item">Office Number: ${officeNum}</li>
+        </ul>
+      </div>`
+
+    return card;
+}
+
+function generateEngineerCards(engineerArray){
+    let engineerCards = [];
+
+    engineerArray.forEach(engineer => {
+        let name = engineer.getName();
+        let role = engineer.getRole();
+        let id = engineer.getId();
+        let email = engineer.getEmail();
+        let github = engineer.getGithub();
+
+        const card = `<div class="card py-4 shadow-lg" style="width: 18rem;">
+        <div class="card-header">
+          <h5 class="card-title">${name}</h5>
+          <h5 class="card-title">${role}</h5>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item">ID: ${id}</li>
+          <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
+          <li class="list-group-item">GitHub: <a href="https://www.github.com/${github}" target="_blank">${github}</a></li>
+        </ul>
+      </div>`
+
+      engineerCards.push(card);
+    })
+    return engineerCards;
+}
+
+function generateInternCards(internArray){
+    let internCards = [];
+
+    internArray.forEach(intern => {
+        let name = intern.getName();
+        let role = intern.getRole();
+        let id = intern.getId();
+        let email = intern.getEmail();
+        let school = intern.getSchool();
+
+        const card = `<div class="card py-4 shadow-lg" style="width: 18rem;">
+        <div class="card-header">
+          <h5 class="card-title">${name}</h5>
+          <h5 class="card-title">${role}</h5>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item">ID: ${id}</li>
+          <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
+          <li class="list-group-item">School: ${school}</li>
+        </ul>
+      </div>`
+
+      internCards.push(card);
+    })
+    return internCards;
+}
+
+const generatePage = (managerCard, engineerCards, internCards) => {
 return `
 <!DOCTYPE html> 
 <html lang="en"> 
@@ -18,7 +95,10 @@ return `
             </div>
         </div>
     </header>
-    <section id="card_container" class="container-fluid bg-dark">
+    <section id="card_container" class="container d-flex justify-content-around flex-wrap py-5">
+    ${managerCard}
+    ${engineerCards.map(card => {return card}).join("")}
+    ${internCards.map(card => {return card}).join("")}
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="../index.js" defer='defer'></script>
@@ -26,4 +106,5 @@ return `
 </html>
 `;
 };
-module.exports = generatePage;
+
+module.exports = {generateManagerCard, generateInternCards, generateEngineerCards, generatePage};

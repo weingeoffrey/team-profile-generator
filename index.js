@@ -1,15 +1,18 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-const generatePage = require("./src/page-template.js");
-const fs = require('fs');
+const {generateManagerCard, generateInternCards, generateEngineerCards, generatePage} = require("./src/page-template");
 
 // Array to contain all engineers
 const engineerArr = [];
 
 // Array to contain all interns
 const internArr = [];
+
+let engineerCards = [];
+let internCards = [];
 
 // Inquirer object for common menu option question
 const menuOptions = {
@@ -44,29 +47,6 @@ const managerQuestions = [
     menuOptions
 ];
 
-function generateCards(engineerArray){
-    engineerArray.forEach(engineer => {
-        let name = engineer.getName();
-        let role = engineer.getRole();
-        let id = engineer.getId();
-        let email = engineer.getEmail();
-        let github = engineer.getGithub();
-
-        const card = `<div class="card" style="width: 18rem;">
-        <div class="card-header">
-          <h5 class="card-title>${name}</h5>
-          <h5 class="card-title>${role}</h5>
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item">ID: ${id}</li>
-          <li class="list-group-item">Email: ${email}</li>
-          <li class="list-group-item">GitHub: ${github}</li>
-        </ul>
-      </div>`
-      document.getElementById("card_container").appendChild(card);
-      
-    })
-}
 
 // Function that will be called when the engineer menu option is selected. Pushes the created Engineer object into the engineerArr
 function engineerPrompt() {
@@ -109,7 +89,8 @@ function engineerPrompt() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            generateCards(engineerArr);
+            engineerCards = generateEngineerCards(engineerArr);
+            fs.writeFile('./dist/index.html', generatePage(engineerCards), err => {if (err) throw err;})
         }
     })
 }
@@ -157,19 +138,13 @@ function internPrompt() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            generateCards(engineerArr);
+            engineerCards = generateEngineerCards(engineerArr);
+            fs.writeFile('./dist/index.html', generatePage(engineerCards), err => {if (err) throw err;})
         }
     })
 }
 
 function init() {
-
-
-    fs.writeFile("./dist/index.html", generatePage(), err => {
-        if (err) throw err;
-    })
-
-
     inquirer.prompt(managerQuestions).then((answers) => {
         const manager = new Manager(answers.managerName, answers.managerEmail, answers.managerID, answers.managerOffice);
         if (answers.menuOptions === "Add an Engineer to the team") {
@@ -185,7 +160,8 @@ function init() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            generateCards(engineerArr);
+            engineerCards = generateEngineerCards(engineerArr);
+            fs.writeFile('./dist/index.html', generatePage(engineerCards), err => {if (err) throw err;})
         }
     });
 }
