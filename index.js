@@ -2,7 +2,8 @@ const inquirer = require('inquirer');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-const { choices } = require('yargs');
+const generatePage = require("./src/page-template.js");
+const fs = require('fs');
 
 // Array to contain all engineers
 const engineerArr = [];
@@ -43,6 +44,30 @@ const managerQuestions = [
     menuOptions
 ];
 
+function generateCards(engineerArray){
+    engineerArray.forEach(engineer => {
+        let name = engineer.getName();
+        let role = engineer.getRole();
+        let id = engineer.getId();
+        let email = engineer.getEmail();
+        let github = engineer.getGithub();
+
+        const card = `<div class="card" style="width: 18rem;">
+        <div class="card-header">
+          <h5 class="card-title>${name}</h5>
+          <h5 class="card-title>${role}</h5>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item">ID: ${id}</li>
+          <li class="list-group-item">Email: ${email}</li>
+          <li class="list-group-item">GitHub: ${github}</li>
+        </ul>
+      </div>`
+      document.getElementById("card_container").appendChild(card);
+      
+    })
+}
+
 // Function that will be called when the engineer menu option is selected. Pushes the created Engineer object into the engineerArr
 function engineerPrompt() {
     const engineerQuestions = [
@@ -70,8 +95,7 @@ function engineerPrompt() {
     ]
 
     inquirer.prompt(engineerQuestions).then((answers) => {
-        const engineer = new Engineer(answers.engineerName, answers.engineerEmail, answers.engineerID, answers.engineerGithub);
-        engineerArr.push(engineer);
+        engineerArr.push(new Engineer(answers.engineerName, answers.engineerEmail, answers.engineerID, answers.engineerGithub));
         if (answers.menuOptions === "Add an Engineer to the team") {
             console.log("|====================================|");
             console.log("|          Add   Engineer            |");
@@ -85,9 +109,7 @@ function engineerPrompt() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            console.log("finish team")
-            console.log(engineerArr);
-            console.log(internArr);
+            generateCards(engineerArr);
         }
     })
 }
@@ -135,15 +157,21 @@ function internPrompt() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            console.log("finish team")
-            console.log(engineerArr);
-            console.log(internArr);
+            generateCards(engineerArr);
         }
     })
 }
 
 function init() {
+
+
+    fs.writeFile("./dist/index.html", generatePage(), err => {
+        if (err) throw err;
+    })
+
+
     inquirer.prompt(managerQuestions).then((answers) => {
+        const manager = new Manager(answers.managerName, answers.managerEmail, answers.managerID, answers.managerOffice);
         if (answers.menuOptions === "Add an Engineer to the team") {
             console.log("|====================================|");
             console.log("|          Add   Engineer            |");
@@ -157,7 +185,7 @@ function init() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            console.log("finish team")
+            generateCards(engineerArr);
         }
     });
 }
