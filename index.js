@@ -11,6 +11,7 @@ const engineerArr = [];
 // Array to contain all interns
 const internArr = [];
 
+let managerCard = [];
 let engineerCards = [];
 let internCards = [];
 
@@ -89,8 +90,19 @@ function engineerPrompt() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            engineerCards = generateEngineerCards(engineerArr);
-            fs.writeFile('./dist/index.html', generatePage(engineerCards), err => {if (err) throw err;})
+            if (engineerArr.length != 0 && internArr.length != 0) {
+                engineerCards = generateEngineerCards(engineerArr);
+                internCards = generateInternCards(internArr);
+                fs.writeFile('./dist/index.html', generatePage(managerCard, engineerCards, internCards), err => {if (err) throw err;})
+            }
+            else if (engineerArr.length > 0 && internArr.length == 0) {
+                engineerCards = generateEngineerCards(engineerArr);
+                fs.writeFile('./dist/index.html', generatePage(managerCard, engineerCards, ""), err => {if (err) throw err;})
+            }
+            else if (engineerArr.length == 0 && internArr.length > 0) {
+                internCards = generateInternCards(internArr);
+                fs.writeFile('./dist/index.html', generatePage(managerCard, "", internCards), err => {if (err) throw err;})
+            }
         }
     })
 }
@@ -124,7 +136,6 @@ function internPrompt() {
     inquirer.prompt(internQuestions).then((answers) => {
         const intern = new Intern(answers.internName, answers.internEmail, answers.internID, answers.internSchool);
         internArr.push(intern);
-        console.log("added intern to intern array");
         if (answers.menuOptions === "Add an Engineer to the team") {
             console.log("|====================================|");
             console.log("|          Add   Engineer            |");
@@ -138,15 +149,31 @@ function internPrompt() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            engineerCards = generateEngineerCards(engineerArr);
-            fs.writeFile('./dist/index.html', generatePage(engineerCards), err => {if (err) throw err;})
+            if (engineerArr.length != 0 && internArr.length != 0) {
+                engineerCards = generateEngineerCards(engineerArr);
+                internCards = generateInternCards(internArr);
+                fs.writeFile('./dist/index.html', generatePage(managerCard, engineerCards, internCards), err => {if (err) throw err;})
+            }
+            else if (engineerArr.length > 0 && internArr.length == 0) {
+                engineerCards = generateEngineerCards(engineerArr);
+                fs.writeFile('./dist/index.html', generatePage(managerCard, engineerCards, ""), err => {if (err) throw err;})
+            }
+            else if (engineerArr.length == 0 && internArr.length > 0) {
+                internCards = generateInternCards(internArr);
+                fs.writeFile('./dist/index.html', generatePage(managerCard, "", internCards), err => {if (err) throw err;})
+            }
         }
     })
 }
 
 function init() {
+    console.log("|====================================|");
+    console.log("|          Add   Manager             |");
+    console.log("|====================================|");
     inquirer.prompt(managerQuestions).then((answers) => {
         const manager = new Manager(answers.managerName, answers.managerEmail, answers.managerID, answers.managerOffice);
+        managerCard = generateManagerCard(manager);
+
         if (answers.menuOptions === "Add an Engineer to the team") {
             console.log("|====================================|");
             console.log("|          Add   Engineer            |");
@@ -160,8 +187,7 @@ function init() {
             internPrompt();
         }
         else if (answers.menuOptions === "Finish building the team!") {
-            engineerCards = generateEngineerCards(engineerArr);
-            fs.writeFile('./dist/index.html', generatePage(engineerCards), err => {if (err) throw err;})
+            fs.writeFile('./dist/index.html', generatePage(managerCard, "", ""), err => {if (err) throw err;})
         }
     });
 }

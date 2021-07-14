@@ -6,15 +6,15 @@ function generateManagerCard(manager){
     let email = manager.getEmail();
     let officeNum = manager.getOffice();
 
-    const card = `<div class="card py-4 shadow-lg" style="width: 18rem;">
-        <div class="card-header">
+    const card = `<div class="card pb-1 shadow-lg mb-3" style="width: 18rem;">
+        <div class="card-header bg-primary text-white">
           <h5 class="card-title">${name}</h5>
-          <h5 class="card-title">${role}</h5>
+          <h5 class="card-title"><i class="bi bi-cup" style="padding-right: 0.5rem"></i>${role}</h5>
         </div>
-        <ul class="list-group">
+        <ul class="list-group py-4">
           <li class="list-group-item">ID: ${id}</li>
-          <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
-          <li class="list-group-item">Office Number: ${officeNum}</li>
+          <li class="list-group-item"></i>Email: <a href="mailto:${email}">${email}</a></li>
+          <li class="list-group-item"></i>Office Number: ${officeNum}</li>
         </ul>
       </div>`
 
@@ -31,12 +31,12 @@ function generateEngineerCards(engineerArray){
         let email = engineer.getEmail();
         let github = engineer.getGithub();
 
-        const card = `<div class="card py-4 shadow-lg" style="width: 18rem;">
-        <div class="card-header">
+        const card = `<div class="card pb-1 shadow-lg mb-3" style="width: 18rem;">
+        <div class="card-header bg-success text-white">
           <h5 class="card-title">${name}</h5>
-          <h5 class="card-title">${role}</h5>
+          <h5 class="card-title"><i class="bi bi-eyeglasses" style="padding-right: 0.5rem"></i>${role}</h5>
         </div>
-        <ul class="list-group">
+        <ul class="list-group py-4">
           <li class="list-group-item">ID: ${id}</li>
           <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
           <li class="list-group-item">GitHub: <a href="https://www.github.com/${github}" target="_blank">${github}</a></li>
@@ -58,12 +58,12 @@ function generateInternCards(internArray){
         let email = intern.getEmail();
         let school = intern.getSchool();
 
-        const card = `<div class="card py-4 shadow-lg" style="width: 18rem;">
-        <div class="card-header">
+        const card = `<div class="card pb-1 shadow-lg mb-3" style="width: 18rem;">
+        <div class="card-header bg-info text-white">
           <h5 class="card-title">${name}</h5>
-          <h5 class="card-title">${role}</h5>
+          <h5 class="card-title"><i class="bi bi-person-circle" style="padding-right: 0.5rem"></i>${role}</h5>
         </div>
-        <ul class="list-group">
+        <ul class="list-group py-4">
           <li class="list-group-item">ID: ${id}</li>
           <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
           <li class="list-group-item">School: ${school}</li>
@@ -85,7 +85,7 @@ return `
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Team Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
@@ -97,11 +97,24 @@ return `
     </header>
     <section id="card_container" class="container d-flex justify-content-around flex-wrap py-5">
     ${managerCard}
-    ${engineerCards.map(card => {return card}).join("")}
-    ${internCards.map(card => {return card}).join("")}
+    ${(() => {
+        if (engineerCards != "") {
+            return engineerCards.map(card => (`${card}`)).join("")
+        }
+        else {
+            return ""
+        }
+    })()}
+    ${(() => {
+        if (internCards != "") {
+            return internCards.map(card => (`${card}`)).join("")
+        }
+        else {
+            return ""
+        }
+    })()}
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="../index.js" defer='defer'></script>
 </body>
 </html>
 `;
