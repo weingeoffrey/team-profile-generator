@@ -6,6 +6,7 @@
 Allows a manager to create a basic HTML file containing information regarding their team
 
 Video showcase of functionality: https://drive.google.com/file/d/1zjU7YBUk55Ya5TZZpatEYenE2KfUgfTV/view?usp=sharing
+
 Video showcase of tests: https://drive.google.com/file/d/18d4piSjFGO8aQ4kEyaF9nOFkX3gUSSOY/view
 
 ## Table of Contents
